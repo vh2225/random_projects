@@ -1,0 +1,15 @@
+# Requirements for Image Generator Bot
+
+# Core dependencies
+gradio>=4.0.0
+diffusers>=0.24.0
+transformers>=4.35.0
+torch>=2.0.0
+torchvision>=0.15.0
+accelerate>=0.24.0
+
+# Image handling
+Pillow>=10.0.0
+
+# Faster model loading
+safetensors>=0.4.0
