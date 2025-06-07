@@ -1,26 +1,40 @@
 import numpy as np
 import neat
+import torch
 from gym_super_mario_bros import SuperMarioBrosEnv
 from gym_super_mario_bros.actions import SIMPLE_MOVEMENT
 from nes_py.wrappers import JoypadSpace
-from agents.mario_agent import MarioAgent
+from agents.mario_agent_gpu import MarioAgentGPU
+import multiprocessing as mp
+from concurrent.futures import ThreadPoolExecutor
 
 
-class FitnessEvaluator:
-    """Evaluates fitness of NEAT genomes by playing Mario."""
+class FitnessEvaluatorGPU:
+    """GPU-accelerated fitness evaluator for NEAT genomes playing Mario."""
     
-    def __init__(self, level='1-1', render=False, action_type='simple'):
+    def __init__(self, level='1-1', render=False, action_type='simple', device=None, batch_size=4):
         """
-        Initialize fitness evaluator.
+        Initialize GPU fitness evaluator.
         
         Args:
             level: Mario level to play (e.g., '1-1', '2-1', etc.)
             render: Whether to render the game
             action_type: Type of action space
+            device: PyTorch device ('cuda' or 'cpu')
+            batch_size: Number of genomes to evaluate in parallel
         """
         self.level = level
         self.render = render
         self.action_type = action_type
+        self.batch_size = batch_size
+        
+        # Set device
+        if device is None:
+            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        else:
+            self.device = torch.device(device)
+            
+        print(f"FitnessEvaluatorGPU using device: {self.device}")
         
         # Statistics tracking
         self.generation_stats = {
@@ -30,6 +44,10 @@ class FitnessEvaluator:
             'max_score': []
         }
         
+        # GPU memory optimization
+        if self.device.type == 'cuda':
+            torch.cuda.empty_cache()
+            
     def create_env(self):
         """Create and configure the Mario environment."""
         env = SuperMarioBrosEnv()
@@ -54,24 +72,29 @@ class FitnessEvaluator:
         # Create neural network from genome
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         
-        # Create agent and environment
-        agent = MarioAgent(genome, config, self.action_type)
+        # Create GPU-accelerated agent and environment
+        agent = MarioAgentGPU(genome, config, self.action_type, self.device)
         env = self.create_env()
         
         # Play the game
         fitness = self.play_episode(env, net, agent)
         
         env.close()
+        
+        # Clear GPU cache periodically
+        if self.device.type == 'cuda':
+            torch.cuda.empty_cache()
+            
         return fitness
     
     def play_episode(self, env, net, agent, max_steps=10000):
         """
-        Play a single episode of Mario.
+        Play a single episode of Mario with GPU acceleration.
         
         Args:
             env: Mario environment
             net: Neural network
-            agent: Mario agent
+            agent: Mario agent with GPU support
             max_steps: Maximum steps per episode
             
         Returns:
@@ -93,6 +116,10 @@ class FitnessEvaluator:
         # Get starting position
         initial_info = env.env._get_info()
         starting_x_pos = initial_info.get('x_pos', 0)
+        
+        # State buffer for batch processing
+        state_buffer = []
+        action_buffer = []
         
         for step in range(max_steps):
             if self.render:
@@ -198,9 +225,35 @@ class FitnessEvaluator:
         
         return max(0, fitness)
     
+    def evaluate_genome_batch(self, genome_batch, config):
+        """
+        Evaluate a batch of genomes in parallel.
+        
+        Args:
+            genome_batch: List of (genome_id, genome) tuples
+            config: NEAT configuration
+            
+        Returns:
+            List of fitness scores
+        """
+        fitness_scores = []
+        
+        with ThreadPoolExecutor(max_workers=min(self.batch_size, len(genome_batch))) as executor:
+            futures = []
+            for genome_id, genome in genome_batch:
+                future = executor.submit(self.evaluate_genome, genome, config)
+                futures.append((genome_id, genome, future))
+            
+            for genome_id, genome, future in futures:
+                fitness = future.result()
+                genome.fitness = fitness
+                fitness_scores.append(fitness)
+                
+        return fitness_scores
+    
     def evaluate_genomes(self, genomes, config):
         """
-        Evaluate all genomes in a generation.
+        Evaluate all genomes in a generation with GPU acceleration.
         
         Args:
             genomes: List of (genome_id, genome) tuples
@@ -210,13 +263,18 @@ class FitnessEvaluator:
         generation_distance = []
         generation_score = []
         
+        # Sequential evaluation (more stable than parallel for now)
         for genome_id, genome in genomes:
             fitness = self.evaluate_genome(genome, config)
             genome.fitness = fitness
             generation_fitness.append(fitness)
             
-            # For detailed stats, we'd need to track these in play_episode
-            # For now, we'll approximate based on fitness
+            # Clear GPU cache periodically
+            if self.device.type == 'cuda' and len(generation_fitness) % 5 == 0:
+                torch.cuda.empty_cache()
+        
+        # Calculate approximate stats
+        for fitness in generation_fitness:
             generation_distance.append(fitness * 0.8)
             generation_score.append(fitness * 10)
         
@@ -227,8 +285,15 @@ class FitnessEvaluator:
         self.generation_stats['max_score'].append(max(generation_score))
         
         # Print generation summary
-        print(f"Generation Stats:")
+        print(f"Generation Stats (GPU-Accelerated):")
         print(f"  Max Fitness: {max(generation_fitness):.2f}")
         print(f"  Avg Fitness: {np.mean(generation_fitness):.2f}")
         print(f"  Best Distance: {max(generation_distance):.2f}")
+        print(f"  Device: {self.device}")
         print("-" * 50)
+        
+        # GPU memory stats
+        if self.device.type == 'cuda':
+            print(f"GPU Memory: {torch.cuda.memory_allocated()/1024**2:.2f} MB allocated")
+            print(f"GPU Memory: {torch.cuda.memory_reserved()/1024**2:.2f} MB reserved")
+            print("-" * 50)
