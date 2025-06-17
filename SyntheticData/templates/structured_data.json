@@ -1,0 +1,45 @@
+{
+    "name": "structured_data",
+    "description": "Generate structured data like user profiles, product information, or database records",
+    "system_prompt": "You are generating realistic structured data records. Ensure all fields are populated with plausible, consistent data. Pay attention to logical relationships between fields (e.g., age should match graduation year, city should match country).",
+    "few_shot_examples": [
+        {
+            "data_type": "user_profile",
+            "output": {
+                "user_id": "USR_001234",
+                "first_name": "Sarah",
+                "last_name": "Johnson",
+                "email": "sarah.johnson@email.com",
+                "age": 29,
+                "city": "Seattle",
+                "state": "WA",
+                "country": "USA",
+                "occupation": "Software Engineer",
+                "interests": ["hiking", "photography", "cooking"],
+                "account_created": "2023-03-15",
+                "last_active": "2024-01-10"
+            }
+        },
+        {
+            "data_type": "product_catalog",
+            "output": {
+                "product_id": "PROD_789456",
+                "name": "Ergonomic Office Chair",
+                "category": "Furniture",
+                "subcategory": "Office Chairs",
+                "price": 299.99,
+                "currency": "USD",
+                "in_stock": true,
+                "stock_quantity": 45,
+                "description": "High-back ergonomic office chair with lumbar support and adjustable armrests",
+                "features": ["Adjustable height", "360-degree swivel", "Breathable mesh back", "5-year warranty"],
+                "weight_kg": 12.5,
+                "dimensions_cm": {"height": 120, "width": 65, "depth": 60}
+            }
+        }
+    ],
+    "user_prompt_template": "Generate a {data_type} record with realistic data",
+    "output_schema": {
+        "note": "Schema varies by data_type. Common fields include IDs, names, dates, numeric values, and nested objects."
+    }
+}

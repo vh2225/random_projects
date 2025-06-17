@@ -1,0 +1,89 @@
+{
+    "name": "facebook_profiles",
+    "description": "Generate realistic Facebook user profiles with personal information and activity data",
+    "system_prompt": "You are generating realistic Facebook user profiles. Each profile should include personal information, interests, relationship status, and social media activity patterns. Make the data diverse and believable while respecting privacy considerations.",
+    "few_shot_examples": [
+        {
+            "profile_type": "young_professional",
+            "output": {
+                "user_id": "fb_1234567890",
+                "name": "Sarah Chen",
+                "age": 28,
+                "location": "San Francisco, CA",
+                "occupation": "Software Engineer at TechCorp",
+                "education": "BS Computer Science, UC Berkeley",
+                "relationship_status": "In a relationship",
+                "interests": ["hiking", "photography", "cooking", "tech meetups", "yoga"],
+                "favorite_pages": ["National Geographic", "TED Talks", "Local Hiking Groups"],
+                "posts_per_week": 3,
+                "friends_count": 547,
+                "profile_picture_style": "professional headshot",
+                "bio": "Love exploring the outdoors and building cool software. Always up for a new adventure!",
+                "privacy_level": "moderate",
+                "joined_date": "2015-09-12",
+                "last_active": "2024-01-15"
+            }
+        },
+        {
+            "profile_type": "college_student",
+            "output": {
+                "user_id": "fb_9876543210",
+                "name": "Marcus Johnson",
+                "age": 20,
+                "location": "Austin, TX",
+                "occupation": "Student at University of Texas",
+                "education": "Studying Business Administration",
+                "relationship_status": "Single",
+                "interests": ["basketball", "gaming", "music festivals", "entrepreneurship", "pizza"],
+                "favorite_pages": ["ESPN", "PlayStation", "Local Music Venues", "Startup News"],
+                "posts_per_week": 8,
+                "friends_count": 892,
+                "profile_picture_style": "casual with friends",
+                "bio": "UT Business major | Aspiring entrepreneur | Always down for hoops 🏀",
+                "privacy_level": "open",
+                "joined_date": "2019-08-25",
+                "last_active": "2024-01-16"
+            }
+        },
+        {
+            "profile_type": "parent",
+            "output": {
+                "user_id": "fb_5555444433",
+                "name": "Jennifer Martinez",
+                "age": 35,
+                "location": "Phoenix, AZ",
+                "occupation": "Elementary School Teacher",
+                "education": "MEd Elementary Education, Arizona State",
+                "relationship_status": "Married",
+                "interests": ["family activities", "reading", "gardening", "craft projects", "education"],
+                "favorite_pages": ["Parenting Tips", "Educational Resources", "Local School District", "Recipe Ideas"],
+                "posts_per_week": 2,
+                "friends_count": 324,
+                "profile_picture_style": "family photo",
+                "bio": "Proud mom of two amazing kids! Teaching 3rd grade and loving every moment.",
+                "privacy_level": "private",
+                "joined_date": "2012-03-18",
+                "last_active": "2024-01-14"
+            }
+        }
+    ],
+    "user_prompt_template": "Generate a Facebook user profile for a {profile_type}",
+    "output_schema": {
+        "user_id": "string, unique Facebook-style ID",
+        "name": "string, full name",
+        "age": "integer, realistic age",
+        "location": "string, city and state/country",
+        "occupation": "string, job title and company",
+        "education": "string, degree and school",
+        "relationship_status": "string, one of: Single, In a relationship, Married, It's complicated",
+        "interests": "array of strings, hobbies and interests",
+        "favorite_pages": "array of strings, pages they would like",
+        "posts_per_week": "integer, posting frequency",
+        "friends_count": "integer, number of friends",
+        "profile_picture_style": "string, description of profile photo",
+        "bio": "string, short personal description",
+        "privacy_level": "string, one of: open, moderate, private",
+        "joined_date": "string, date in YYYY-MM-DD format",
+        "last_active": "string, recent date in YYYY-MM-DD format"
+    }
+}

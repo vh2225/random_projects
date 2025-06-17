@@ -1,0 +1,23 @@
+[
+  {
+    "rating": 5,
+    "title": "Excellent laptop stand - highly recommend!",
+    "review": "This laptop stand has been a game changer for my home office setup. The height adjustment is smooth and stays in place perfectly. My neck and back pain have significantly reduced since I started using it. The aluminum construction feels very sturdy and premium. It also helps keep my laptop cooler with better airflow underneath.",
+    "verified_purchase": true,
+    "helpful_count": 89
+  },
+  {
+    "rating": 3,
+    "title": "Good but has some issues",
+    "review": "The wireless mouse works well most of the time, but I've noticed some lag occasionally, especially when I'm far from my computer. Battery life is decent - lasts about 2 weeks with heavy use. The scroll wheel is a bit too sensitive for my liking. Build quality is okay for the price point.",
+    "verified_purchase": true,
+    "helpful_count": 12
+  },
+  {
+    "rating": 4,
+    "title": "Solid USB hub with minor quirks",
+    "review": "Does exactly what I need - expands my laptop's limited USB ports. All 4 ports work simultaneously without issues. The cable could be a bit longer, and it does get warm during extended use. Transfer speeds are good for USB 3.0. Would recommend for anyone needing extra ports.",
+    "verified_purchase": true,
+    "helpful_count": 34
+  }
+]

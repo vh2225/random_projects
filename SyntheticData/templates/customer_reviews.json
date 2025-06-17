@@ -1,0 +1,45 @@
+{
+    "name": "customer_reviews",
+    "description": "Generate realistic customer product reviews",
+    "system_prompt": "You are generating realistic customer reviews for products. Each review should include a rating (1-5 stars), a title, the review text, and metadata like verified purchase status.",
+    "few_shot_examples": [
+        {
+            "product": "Wireless Bluetooth Headphones",
+            "output": {
+                "rating": 4,
+                "title": "Great sound quality, minor comfort issue",
+                "review": "I've been using these headphones for about a month now. The sound quality is excellent - crisp highs and deep bass. Battery life easily lasts me through my work day. My only complaint is that they can feel a bit tight after wearing for 3+ hours. Overall, very happy with the purchase.",
+                "verified_purchase": true,
+                "helpful_count": 23
+            }
+        },
+        {
+            "product": "Stainless Steel Water Bottle",
+            "output": {
+                "rating": 5,
+                "title": "Keeps drinks cold all day!",
+                "review": "This water bottle is amazing! I put ice water in it at 7am and when I get home at 6pm, there's still ice in it. No leaks, easy to clean, and the perfect size for my car cup holder. Best water bottle I've owned.",
+                "verified_purchase": true,
+                "helpful_count": 156
+            }
+        },
+        {
+            "product": "USB-C Charging Cable",
+            "output": {
+                "rating": 2,
+                "title": "Stopped working after 2 months",
+                "review": "Cable worked fine at first but started having connection issues after about 2 months. Now I have to position it just right to get it to charge. For the price, I expected better durability.",
+                "verified_purchase": true,
+                "helpful_count": 8
+            }
+        }
+    ],
+    "user_prompt_template": "Generate a realistic customer review for: {product_name}",
+    "output_schema": {
+        "rating": "integer between 1-5",
+        "title": "string, brief summary",
+        "review": "string, detailed review text",
+        "verified_purchase": "boolean",
+        "helpful_count": "integer"
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "name": "qa_pairs",
+    "description": "Generate question and answer pairs for training or FAQ datasets",
+    "system_prompt": "You are generating high-quality question and answer pairs. Each pair should be informative, accurate, and natural-sounding. Questions should be clear and specific, answers should be helpful and comprehensive.",
+    "few_shot_examples": [
+        {
+            "topic": "Python programming",
+            "output": {
+                "question": "What is the difference between a list and a tuple in Python?",
+                "answer": "Lists and tuples are both sequence data types in Python, but they have key differences: Lists are mutable (can be modified after creation) and are defined with square brackets [1, 2, 3], while tuples are immutable (cannot be changed) and are defined with parentheses (1, 2, 3). Lists are typically used for collections that might change, while tuples are used for fixed collections or when you need an immutable sequence as a dictionary key.",
+                "category": "programming",
+                "difficulty": "beginner"
+            }
+        },
+        {
+            "topic": "Cooking basics",
+            "output": {
+                "question": "How do I know when chicken is fully cooked?",
+                "answer": "Chicken is fully cooked when it reaches an internal temperature of 165°F (74°C). Use a meat thermometer inserted into the thickest part of the meat, avoiding bones. Visual cues include: the meat is no longer pink, juices run clear (not red or pink), and the meat feels firm to the touch. For bone-in pieces, the meat should easily pull away from the bone. Always prioritize temperature over visual cues for food safety.",
+                "category": "cooking",
+                "difficulty": "beginner"
+            }
+        }
+    ],
+    "user_prompt_template": "Generate a question and answer pair about: {topic}",
+    "output_schema": {
+        "question": "string, clear and specific question",
+        "answer": "string, comprehensive and accurate answer",
+        "category": "string, topic category",
+        "difficulty": "string, one of: beginner, intermediate, advanced"
+    }
+}

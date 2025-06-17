@@ -1,0 +1,15 @@
+# Core dependencies
+requests>=2.31.0        # For HTTP requests to Ollama API
+pydantic>=2.0.0        # For data validation and settings
+pyyaml>=6.0.1          # For YAML configuration files
+click>=8.1.0           # For CLI interface
+tqdm>=4.66.0           # For progress bars
+
+# Data handling
+pandas>=2.0.0          # For CSV output and data manipulation
+jsonlines>=4.0.0       # For JSONL file handling
+
+# Development dependencies (optional)
+black>=23.0.0          # Code formatting
+pytest>=7.0.0          # Testing
+python-dotenv>=1.0.0   # Environment variables
